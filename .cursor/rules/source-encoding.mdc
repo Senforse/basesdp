@@ -1,0 +1,31 @@
+---
+description: UTF-8 无 BOM；规避 Windows 下 Write 误落盘 UTF-16
+alwaysApply: true
+---
+
+# 源文件编码（必须）
+
+## 目标
+
+- 文本源码：**UTF-8、无 BOM**（与仓库根 `.editorconfig` 一致）。
+
+## `Write` 工具是什么？
+
+- 指 **Cursor Agent 内置的写文件能力**（创建/覆盖整个文件），**不是**用户单独安装的软件。
+- 在 **Windows** 上，该能力曾把部分文件保存为 **UTF-16 LE**（字节呈 `70 00 61 00` 对应 `pa`，中文在 IDE 里易乱码），**违反** UTF-8 约定。
+
+## Agent 必须遵守（从根源避免再犯）
+
+1. **改现有文件**：一律优先 **`apply_patch`** 或 **`StrReplace`**（增量补丁），避免整文件 `Write`。
+2. **新建或不得不整文件写入时**：
+   - 仍优先 **`apply_patch` Add File**；
+   - 若使用了 **`Write`**：对**本次写入过的每一个文本路径**，在当轮对话内 **紧接着** 执行一次：
+     - `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ensure-utf8-no-bom.ps1 -Path '<文件1>','<文件2>'`
+     - 工作目录为仓库根 `Sdp`（含 `scripts` 目录的路径）。
+3. **禁止**：依赖「先 `Write` 再指望编辑器自动 UTF-8」；Windows 下必须先按第 2 步校正或由补丁工具直接写入 UTF-8。
+4. **不要做**：无差别递归遍历整个仓库批量转码；仅处理**本轮改动或用户点名的文件**。
+
+## 辅助
+
+- 脚本：`scripts/ensure-utf8-no-bom.ps1`（识别 UTF-16 LE / UTF-8 BOM 并重写为 UTF-8 无 BOM）。
+- 不要用长十六进制排查作为默认步骤；除非用户要求或单文件仍异常。

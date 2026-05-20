@@ -1,0 +1,70 @@
+
+
+debug: false
+
+spring:
+  datasource:
+    # Boot 3 先从标准属性创建 DataSource；仅写在 druid.* 下会导致无法识别 url/driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:dm://192.168.204.111:5236?schema=SDPDBA&compatibleMode=oracle&useUnicode=true&characterEncoding=UTF-8
+    username: sdpdba
+    password: Szh_Software@617
+    driver-class-name: dm.jdbc.driver.DmDriver
+    druid:
+      initial-size: 5
+      max-active: 20
+      min-idle: 5
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat
+      use-global-data-source-stat: true
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=10m
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+  data:
+    # Sa-Token（token / session）与「在线用户」列表共用此 Redis；业务侧不再单独维护一套在线用户 Redis Key。
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      # password: # 本地 Redis 无密码可省略
+
+arthas:
+  telnetPort: 13658
+  httpPort: 18563
+
+# Sa-Token：token 存 Redis；前端请求头名 satoken（与 token-name 一致）
+sa-token:
+  token-name: satoken
+  timeout: 86400
+  active-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: false
+
+#cors:
+#  allowed-origins: "http://10.177.40.92:8000"
+
+
+
+
+
+
+
+
+
+
+
+

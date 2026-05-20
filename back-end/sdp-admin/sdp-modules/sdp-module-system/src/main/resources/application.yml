@@ -1,0 +1,28 @@
+# sdp-system 模块配置（随 jar 进入 classpath，与 sdp-server 的 application*.yml 合并）
+#
+# 会话 / 在线用户：登录后 Token、账号 Session、Token-Session（含 sdpApplication、sdpAuthType）由 Sa-Token
+# 经 SaTokenDao 写入 Redis；连接与仓库前缀随 spring.data.redis、sa-token.*（见 sdp-server 的 application-*.yml）。
+# Maven：sdp-common-security 引入 spring-boot-starter-data-redis + sa-token-redis-jackson。
+#
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+mybatis:
+  mapper-locations: classpath*:mappers/**/*.xml
+  type-aliases-package: org.nmgyj
+
+mybatis-plus:
+  mapper-locations: classpath*:mappers/**/*.xml
+  type-aliases-package: org.nmgyj
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      db-type: dm
+      # 达梦 Oracle 兼容模式下列名多为大写；生成小写 dept_id 等会导致「无效的列」
+      capital-mode: true

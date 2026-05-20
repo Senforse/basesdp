@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/MAVEN_IDEA.md" charset="UTF-16" />
+    <file url="file://$PROJECT_DIR$/sdp-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-common/sdp-common-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-common/sdp-common-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-common/sdp-common-mybatis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-common/sdp-common-mybatis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-common/sdp-common-security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-common/sdp-common-security/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-design-zhcn.md" charset="US-ASCII" />
+    <file url="file://$PROJECT_DIR$/sdp-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-business/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-business/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-codegen/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-codegen/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-system/src/main/resources/db/rbac-dm.sql" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-system/src/main/resources/rbac-dm.sql" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-modules/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-plugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-plugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-server/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sdp_cn_design.md" charset="UTF-16" />
+    <file url="file://$PROJECT_DIR$/sdp_design_entities_zh.md" charset="UTF-16" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$APPLICATION_HOME_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$APPLICATION_HOME_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

@@ -1,0 +1,26 @@
+import http, { unwrap } from '../http'
+import type { ApiEnvelope } from '../types'
+
+export interface [[${pageName}]] {
+[# th:each="field : ${fields}"]  [[${field.prop()}]]?: [[${field.tsType()}]]
+[/]}
+
+export async function fetch[[${pageName}]]List(): Promise<[[${pageName}]][]> {
+  return unwrap(await http.get<ApiEnvelope<[[${pageName}]][]>>('/api/admin/[[${tableApiPath}]]'))
+}
+
+export async function fetch[[${pageName}]]Detail(id: string | number): Promise<[[${pageName}]]> {
+  return unwrap(await http.get<ApiEnvelope<[[${pageName}]]>>(`/api/admin/[[${tableApiPath}]]/${id}`))
+}
+
+export async function create[[${pageName}]](body: [[${pageName}]]): Promise<void> {
+  unwrap(await http.post<ApiEnvelope<null>>('/api/admin/[[${tableApiPath}]]', body))
+}
+
+export async function update[[${pageName}]](id: string | number, body: [[${pageName}]]): Promise<void> {
+  unwrap(await http.put<ApiEnvelope<null>>(`/api/admin/[[${tableApiPath}]]/${id}`, body))
+}
+
+export async function delete[[${pageName}]](id: string | number): Promise<void> {
+  unwrap(await http.delete<ApiEnvelope<null>>(`/api/admin/[[${tableApiPath}]]/${id}`))
+}

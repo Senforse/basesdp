@@ -1,0 +1,92 @@
+{
+  "properties": [
+    {
+      "name": "sdp.logging.access.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to enable access log interceptor."
+    },
+    {
+      "name": "sdp.logging.access.include-query-string",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to include query string in access logs."
+    },
+    {
+      "name": "sdp.logging.access.max-query-length",
+      "type": "java.lang.Integer",
+      "defaultValue": 2048,
+      "description": "Maximum persisted query string length."
+    },
+    {
+      "name": "sdp.logging.access.db-enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "Whether to persist selected access logs to database."
+    },
+    {
+      "name": "sdp.logging.access.exclude-paths",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Excluded request paths for access logging."
+    },
+    {
+      "name": "sdp.logging.access.db-include-paths",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Request path patterns that should be persisted to database."
+    },
+    {
+      "name": "sdp.logging.file.path",
+      "type": "java.lang.String",
+      "defaultValue": "logs",
+      "description": "Base directory for rolling log files."
+    },
+    {
+      "name": "sdp.logging.file.retention-days",
+      "type": "java.lang.Integer",
+      "defaultValue": 15,
+      "description": "Logback rolling retention days."
+    },
+    {
+      "name": "sdp.logging.file.max-file-size",
+      "type": "java.lang.String",
+      "defaultValue": "50MB",
+      "description": "Maximum size per rolled log file."
+    },
+    {
+      "name": "sdp.logging.file.total-size-cap",
+      "type": "java.lang.String",
+      "defaultValue": "5GB",
+      "description": "Total disk cap for rolled log files."
+    },
+    {
+      "name": "sdp.logging.archive.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether periodic log archive cleanup is enabled."
+    },
+    {
+      "name": "sdp.logging.archive.cron",
+      "type": "java.lang.String",
+      "defaultValue": "0 30 3 * * ?",
+      "description": "Cron expression of archive cleanup task."
+    },
+    {
+      "name": "sdp.logging.archive.login-retention-days",
+      "type": "java.lang.Integer",
+      "defaultValue": 90,
+      "description": "Retention window for login logs."
+    },
+    {
+      "name": "sdp.logging.archive.access-retention-days",
+      "type": "java.lang.Integer",
+      "defaultValue": 30,
+      "description": "Retention window for access logs."
+    },
+    {
+      "name": "sdp.logging.archive.audit-retention-days",
+      "type": "java.lang.Integer",
+      "defaultValue": 180,
+      "description": "Retention window for audit logs."
+    }
+  ]
+}

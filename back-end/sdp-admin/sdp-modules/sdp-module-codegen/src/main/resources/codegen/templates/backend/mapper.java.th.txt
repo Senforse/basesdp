@@ -1,0 +1,13 @@
+package [[${rootPackage}]].mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import [[${rootPackage}]].entity.[[${entityName}]];
+
+/**
+ * {@link [[${entityName}]]} 的 MyBatis-Plus Mapper。
+ *
+ * @author nmgyj
+ * @since 2026-05-15
+ */
+public interface [[${mapperName}]] extends BaseMapper<[[${entityName}]]> {
+}

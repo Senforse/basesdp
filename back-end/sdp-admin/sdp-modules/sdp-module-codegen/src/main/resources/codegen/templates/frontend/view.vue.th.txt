@@ -1,0 +1,118 @@
+<script setup lang="ts">
+import { onMounted, reactive, ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { create[[${pageName}]], delete[[${pageName}]], fetch[[${pageName}]]List, update[[${pageName}]], type [[${pageName}]] } from '[[${apiImportPath}]]'
+
+const loading = ref(false)
+const list = ref<[[${pageName}]][]>([])
+const dialogVisible = ref(false)
+const editingId = ref<string | number | null>(null)
+const addPerm = '[[${permPrefix}]]:add'
+const updatePerm = '[[${permPrefix}]]:update'
+const deletePerm = '[[${permPrefix}]]:delete'
+
+const form = reactive<[[${pageName}]]>({
+[# th:each="field : ${fields}"]  [[${field.prop()}]]: [(${field.defaultValue()})],
+[/]})
+
+async function load() {
+  loading.value = true
+  try {
+    list.value = await fetch[[${pageName}]]List()
+  } catch (e: unknown) {
+    ElMessage.error(e instanceof Error ? e.message : '加载失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+function openCreate() {
+  editingId.value = null
+  Object.assign(form, {
+[# th:each="field : ${fields}"]    [[${field.prop()}]]: [(${field.defaultValue()})],
+[/]  })
+  dialogVisible.value = true
+}
+
+function openEdit(row: [[${pageName}]]) {
+  editingId.value = (row.id as string | number) ?? null
+  Object.assign(form, { ...row })
+  dialogVisible.value = true
+}
+
+async function submit() {
+  try {
+    if (editingId.value != null) {
+      await update[[${pageName}]](editingId.value, { ...form })
+      ElMessage.success('已保存')
+    } else {
+      await create[[${pageName}]]({ ...form })
+      ElMessage.success('已创建')
+    }
+    dialogVisible.value = false
+    await load()
+  } catch (e: unknown) {
+    ElMessage.error(e instanceof Error ? e.message : '操作失败')
+  }
+}
+
+async function remove(row: [[${pageName}]]) {
+  try {
+    await ElMessageBox.confirm('确定删除该记录？', '确认', { type: 'warning' })
+    await delete[[${pageName}]](row.id as string | number)
+    ElMessage.success('已删除')
+    await load()
+  } catch (e: unknown) {
+    if (e === 'cancel') return
+    ElMessage.error(e instanceof Error ? e.message : '删除失败')
+  }
+}
+
+onMounted(load)
+</script>
+
+<template>
+  <div class="sdp-page">
+    <el-card class="sdp-panel" shadow="never">
+      <template #header>
+        <div class="sdp-panel-head">
+          <span class="sdp-panel-title">[[${pageName}]] 管理</span>
+          <el-button v-perm="[addPerm]" type="primary" @click="openCreate">新增</el-button>
+        </div>
+      </template>
+
+      <el-table v-loading="loading" :data="list" border row-key="id">
+[# th:each="field : ${fields}"]        <el-table-column prop="[[${field.prop()}]]" label="[[${field.label()}]]" min-width="140" />
+[/]        <el-table-column label="操作" width="220" fixed="right">
+          <template #default="{ row }">
+            <el-button v-perm="[updatePerm]" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button v-perm="[deletePerm]" link type="danger" @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+
+    <el-dialog v-model="dialogVisible" :title="editingId ? '编辑' : '新增'" width="520px" destroy-on-close>
+      <el-form label-width="100px">
+[# th:each="field : ${fields}"]        [# th:unless="${field.primaryKey()}"]
+        <el-form-item label="[[${field.label()}]]">
+[# th:if="${field.uiType() == 'date'}"]          <el-date-picker v-model="form.[[${field.prop()}]]" type="date" value-format="YYYY-MM-DD" class="w-full" />
+[/][# th:if="${field.uiType() == 'datetime'}"]          <el-date-picker v-model="form.[[${field.prop()}]]" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" class="w-full" />
+[/][# th:if="${field.uiType() == 'number' or field.uiType() == 'decimal'}"]          <el-input-number v-model="form.[[${field.prop()}]]" controls-position="right" class="w-full" />
+[/][# th:if="${field.uiType() == 'text'}"]          <el-input v-model.trim="form.[[${field.prop()}]]" />
+[/]        </el-form-item>
+        [/]
+[/]      </el-form>
+      <template #footer>
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button v-perm="[editingId ? updatePerm : addPerm]" type="primary" @click="submit">确定</el-button>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.w-full {
+  width: 100%;
+}
+</style>

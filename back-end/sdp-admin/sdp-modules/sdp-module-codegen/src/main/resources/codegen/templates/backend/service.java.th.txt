@@ -1,0 +1,47 @@
+package [[${rootPackage}]].service;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import [[${rootPackage}]].entity.[[${entityName}]];
+import [[${rootPackage}]].mapper.[[${mapperName}]];
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * [[${entityName}]] 的 CRUD 服务。
+ *
+ * @author nmgyj
+ * @since 2026-05-15
+ */
+@Service
+public class [[${serviceName}]] {
+
+    private final [[${mapperName}]] [[${mapperVar}]];
+
+    public [[${serviceName}]]([[${mapperName}]] [[${mapperVar}]]) {
+        this.[[${mapperVar}]] = [[${mapperVar}]];
+    }
+
+    public List<[[${entityName}]]> listAll() {
+        return [[${mapperVar}]].selectList(new LambdaQueryWrapper<[[${entityName}]]>().orderByDesc([[${entityName}]]::get[[${pkFieldUpper}]]));
+    }
+
+    public [[${entityName}]] getById([[${pkType}]] id) {
+        return [[${mapperVar}]].selectById(id);
+    }
+
+    public void save([[${entityName}]] body) {
+        [[${mapperVar}]].insert(body);
+    }
+
+    public void update([[${entityName}]] body) {
+        if (body.get[[${pkFieldUpper}]]() == null) {
+            throw new IllegalArgumentException("主键不能为空");
+        }
+        [[${mapperVar}]].updateById(body);
+    }
+
+    public void delete([[${pkType}]] id) {
+        [[${mapperVar}]].deleteById(id);
+    }
+}

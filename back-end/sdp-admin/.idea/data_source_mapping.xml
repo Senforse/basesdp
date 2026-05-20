@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/sdp-modules/sdp-module-system/src/main/resources/db/rbac-dm.sql" value="0d378f54-845f-4ac9-887a-db7e016463b7" />
+  </component>
+</project>
