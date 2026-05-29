@@ -54,12 +54,14 @@ public class SysMenuService {
     }
 
     /**
-     * 后台列表：全部菜单扁平排序。
+     * 后台列表：全部菜单扁平排序（不含按钮）。
      *
      * @return 菜单列表
      */
     public List<SysMenu> listAdminFlat() {
-        return sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>().orderByAsc(SysMenu::getSortOrder));
+        return sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>()
+                .in(SysMenu::getMenuType, 0, 1)
+                .orderByAsc(SysMenu::getSortOrder));
     }
 
     /**

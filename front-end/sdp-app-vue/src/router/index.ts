@@ -48,6 +48,7 @@ const staticRoutes = [
       { path: 'menu', component: () => import('@/views/system/SystemMenu.vue') },
       { path: 'role', component: () => import('@/views/system/SystemRole.vue') },
       { path: 'user', component: () => import('@/views/system/SystemUser.vue') },
+      { path: 'dict', component: () => import('@/views/system/SystemDict.vue') },
       { path: 'online-user', component: () => import('@/views/system/SystemOnlineUser.vue') },
       { path: 'codegen', component: () => import('@/views/system/SystemCodegen.vue') },
     ],

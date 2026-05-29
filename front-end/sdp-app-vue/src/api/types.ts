@@ -93,3 +93,23 @@ export interface AutoCodeGenerateResult {
   frontendZipToken?: string
   frontendZipDownloadUrl?: string
 }
+
+export interface SysDictType {
+  id?: number
+  dictCode: string
+  dictName: string
+  description?: string
+  sortOrder?: number
+  status?: number
+}
+
+export interface SysDictItem {
+  id?: number
+  dictTypeId: number
+  dictCode: string
+  itemLabel: string
+  itemValue: string
+  sortOrder?: number
+  status?: number
+  description?: string
+}
