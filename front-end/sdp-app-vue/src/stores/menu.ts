@@ -18,6 +18,7 @@ export const dynamicRouteMap = {
   SystemMenu: () => import('@/views/system/SystemMenu.vue'),
   SystemRole: () => import('@/views/system/SystemRole.vue'),
   SystemUser: () => import('@/views/system/SystemUser.vue'),
+  SystemDict: () => import('@/views/system/SystemDict.vue'),
   SystemOnlineUser: () => import('@/views/system/SystemOnlineUser.vue'),
   SystemCodegen: () => import('@/views/system/SystemCodegen.vue'),
 }
@@ -211,6 +212,7 @@ export const useMenuStore = defineStore('menu', {
             { path: '/system/role', component: 'SystemRole', meta: { title: '角色管理', icon: 'UserFilled' } },
             { path: '/system/menu', component: 'SystemMenu', meta: { title: '菜单管理', icon: 'Menu' } },
             { path: '/system/user', component: 'SystemUser', meta: { title: '用户授权', icon: 'Avatar' } },
+            { path: '/system/dict', component: 'SystemDict', meta: { title: '数据字典', icon: 'Database' } },
             {
               path: '/system/online-user',
               component: 'SystemOnlineUser',
@@ -247,6 +249,10 @@ export const useMenuStore = defineStore('menu', {
       const systemNode = fromApi.find((item) => item.path === '/system')
       if (systemNode) {
         const children = systemNode.children ?? []
+        const hasDict = children.some((item) => item.path === '/system/dict')
+        if (!hasDict) {
+          children.push({ path: '/system/dict', component: 'SystemDict', meta: { title: '数据字典', icon: 'Database' } })
+        }
         const hasCodegen = children.some((item) => item.path === '/system/codegen')
         if (!hasCodegen) {
           children.push({ path: '/system/codegen', component: 'SystemCodegen', meta: { title: '代码生成', icon: 'Tickets' } })

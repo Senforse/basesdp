@@ -49,6 +49,8 @@ BEGIN
     (V_SYS, '用户管理', '/system/user', 'AdminUser', 'system:user:list,system:user:assign,system:user:edit', 1, 'Avatar', 4, 1, 1);
   INSERT INTO sys_menu (parent_id, menu_name, path, component, perms, menu_type, icon, sort_order, visible, status) VALUES
     (V_SYS, '在线用户', '/system/online-user', 'SystemOnlineUser', 'system:online:list,system:online:kick', 1, 'Monitor', 5, 1, 1);
+  INSERT INTO sys_menu (parent_id, menu_name, path, component, perms, menu_type, icon, sort_order, visible, status) VALUES
+    (V_SYS, '数据字典', '/system/dict', 'SystemDict', 'system:dict:list,system:dict:edit', 1, 'Database', 6, 1, 1);
 
   INSERT INTO sys_role_menu (role_id, menu_id) SELECT V_ROLE, ID FROM sys_menu;
 

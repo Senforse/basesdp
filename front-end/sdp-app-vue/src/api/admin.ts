@@ -1,13 +1,15 @@
-import http, { unwrap } from './http'
+import http, {unwrap} from './http'
 import type {
-  AutoCodeGeneratePayload,
-  AutoCodeGenerateResult,
-  ApiEnvelope,
-  OnlineUserPageResult,
-  SysMenu,
-  SysOrganization,
-  SysRole,
-  SysUser,
+    ApiEnvelope,
+    AutoCodeGeneratePayload,
+    AutoCodeGenerateResult,
+    OnlineUserPageResult,
+    SysDictItem,
+    SysDictType,
+    SysMenu,
+    SysOrganization,
+    SysRole,
+    SysUser,
 } from './types'
 
 /** GET /api/admin/orgs/tree */
@@ -165,4 +167,59 @@ export async function downloadFrontendPageZip(token: string): Promise<Blob> {
 /** GET /api/auth/permissions */
 export async function fetchMyPermissions(): Promise<string[]> {
   return unwrap(await http.get<ApiEnvelope<string[]>>('/api/auth/permissions'))
+}
+
+/** GET /api/admin/dict/types */
+export async function fetchDictTypes(): Promise<SysDictType[]> {
+  return unwrap(await http.get<ApiEnvelope<SysDictType[]>>('/api/admin/dict/types'))
+}
+
+/** GET /api/admin/dict/types/:id */
+export async function fetchDictTypeDetail(id: number): Promise<SysDictType> {
+  return unwrap(await http.get<ApiEnvelope<SysDictType>>(`/api/admin/dict/types/${id}`))
+}
+
+/** POST /api/admin/dict/types */
+export async function createDictType(body: SysDictType): Promise<void> {
+  unwrap(await http.post<ApiEnvelope<null>>('/api/admin/dict/types', body))
+}
+
+/** PUT /api/admin/dict/types/:id */
+export async function updateDictType(id: number, body: SysDictType): Promise<void> {
+  unwrap(await http.put<ApiEnvelope<null>>(`/api/admin/dict/types/${id}`, body))
+}
+
+/** DELETE /api/admin/dict/types/:id */
+export async function deleteDictType(id: number): Promise<void> {
+  unwrap(await http.delete<ApiEnvelope<null>>(`/api/admin/dict/types/${id}`))
+}
+
+/** GET /api/admin/dict/items?dictTypeId=xxx */
+export async function fetchDictItemsByType(dictTypeId: number): Promise<SysDictItem[]> {
+  return unwrap(await http.get<ApiEnvelope<SysDictItem[]>>('/api/admin/dict/items', { params: { dictTypeId } }))
+}
+
+/** GET /api/admin/dict/items/:id */
+export async function fetchDictItemDetail(id: number): Promise<SysDictItem> {
+  return unwrap(await http.get<ApiEnvelope<SysDictItem>>(`/api/admin/dict/items/${id}`))
+}
+
+/** POST /api/admin/dict/items */
+export async function createDictItem(body: SysDictItem): Promise<void> {
+  unwrap(await http.post<ApiEnvelope<null>>('/api/admin/dict/items', body))
+}
+
+/** PUT /api/admin/dict/items/:id */
+export async function updateDictItem(id: number, body: SysDictItem): Promise<void> {
+  unwrap(await http.put<ApiEnvelope<null>>(`/api/admin/dict/items/${id}`, body))
+}
+
+/** DELETE /api/admin/dict/items/:id */
+export async function deleteDictItem(id: number): Promise<void> {
+  unwrap(await http.delete<ApiEnvelope<null>>(`/api/admin/dict/items/${id}`))
+}
+
+/** GET /api/admin/dict/items/by-code/:dictCode */
+export async function fetchDictByCode(dictCode: string): Promise<SysDictItem[]> {
+  return unwrap(await http.get<ApiEnvelope<SysDictItem[]>>(`/api/admin/dict/items/by-code/${dictCode}`))
 }
