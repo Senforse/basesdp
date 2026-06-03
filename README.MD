@@ -1,6 +1,32 @@
-sdp项目是一个基于springboot开发的系统平台（逐步改造成基于springCloud Alibaba的微服务架构），
-sdp项目的前端目录：
-front-end
+# Sdp 项目
 
-sdp项目的前端目录：
-back-end
+前后端分离的企业数字化平台（Spring Boot 3 + Vue 3）。
+
+- **前端**：[`front-end/sdp-app-vue/`](front-end/sdp-app-vue/)
+- **后端**：[`back-end/sdp-admin/`](back-end/sdp-admin/)
+- **CI/CD 与部署**：[`deploy/README.md`](deploy/README.md)
+
+## 快速开始
+
+### 本地后端
+
+```bash
+cd back-end/sdp-admin
+# 设置 SDP_DB_PASSWORD 或参考 sdp-server/src/main/resources/application-dev.yml.example
+mvn -pl sdp-server -am spring-boot:run
+```
+
+### 本地前端
+
+```bash
+cd front-end/sdp-app-vue
+npm ci && npm run dev
+```
+
+### 推送到测试环境
+
+```bash
+git push origin develop
+```
+
+流水线成功后访问：**http://192.168.204.111:8088**

@@ -1,0 +1,95 @@
+stages:
+  - validate
+  - test
+  - build
+  - deploy
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+  DOCKER_TLS_CERTDIR: "/certs"
+
+default:
+  tags:
+    - docker
+  interruptible: true
+
+# ---------- 前端编译门禁（所有分支） ----------
+lint-frontend:
+  stage: validate
+  image: node:22-alpine
+  cache:
+    key: npm-$CI_COMMIT_REF_SLUG
+    paths:
+      - front-end/sdp-app-vue/node_modules/
+  script:
+    - cd front-end/sdp-app-vue
+    - npm ci
+    - npm run build
+
+# ---------- 后端单元测试（所有分支） ----------
+test-backend:
+  stage: test
+  image: eclipse-temurin:21-jdk
+  cache:
+    key: m2-$CI_COMMIT_REF_SLUG
+    paths:
+      - .m2/repository/
+  script:
+    - cd back-end/sdp-admin
+    - mvn -pl sdp-server -am test -B
+
+# ---------- Docker 镜像（仅 develop） ----------
+.docker-build:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+
+docker-backend:
+  extends: .docker-build
+  script:
+    - docker build
+        -f deploy/docker/Dockerfile.backend
+        -t "$CI_REGISTRY_IMAGE/sdp-server:$IMAGE_TAG"
+        back-end/sdp-admin
+    - docker push "$CI_REGISTRY_IMAGE/sdp-server:$IMAGE_TAG"
+
+docker-frontend:
+  extends: .docker-build
+  script:
+    - docker build
+        -f deploy/docker/Dockerfile.frontend
+        -t "$CI_REGISTRY_IMAGE/sdp-web:$IMAGE_TAG"
+        .
+    - docker push "$CI_REGISTRY_IMAGE/sdp-web:$IMAGE_TAG"
+
+# ---------- 部署到测试服务器（本机 shell runner） ----------
+deploy-test:
+  stage: deploy
+  tags:
+    - sdp-deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+  needs:
+    - docker-backend
+    - docker-frontend
+  variables:
+    DEPLOY_ROOT: /opt/sdp
+  script:
+    - export REGISTRY="$CI_REGISTRY_IMAGE"
+    - export IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
+    - export DEPLOY_ROOT=/opt/sdp
+    - install -d /opt/sdp
+    - cp deploy/compose/docker-compose.yml /opt/sdp/
+    - cp deploy/scripts/deploy.sh /opt/sdp/
+    - cp deploy/scripts/health-check.sh /opt/sdp/
+    - chmod +x /opt/sdp/deploy.sh /opt/sdp/health-check.sh
+    - bash /opt/sdp/deploy.sh
+  environment:
+    name: test
+    url: http://192.168.204.111:8088

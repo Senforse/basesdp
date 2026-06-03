@@ -1,5 +1,5 @@
 # Normalize text files; UTF-8 content is enforced by EditorConfig + Cursor rules + scripts/ensure-utf8-no-bom.ps1
-* text=auto
+* text=auto eol=lf
 
 *.java text eol=lf
 *.xml text eol=lf
