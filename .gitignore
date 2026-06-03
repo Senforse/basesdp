@@ -1,0 +1,33 @@
+# IDE / editor
+.cursor/
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env / secrets (local overrides)
+.env
+.env.*
+!.env.example
+**/application-dev.local.yml
+
+# Logs
+**/logs/
+*.log
+*.log.gz
+
+# Frontend
+front-end/sdp-app-vue/node_modules/
+front-end/sdp-app-vue/dist/
+
+# Backend Maven
+**/target/
+**/.flattened-pom.xml
+
+# Deploy runtime (server-local only)
+deploy/compose/.env
