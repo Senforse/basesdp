@@ -1,0 +1,59 @@
+# Sdp 独立运行栈（与宿主机已有 Redis / Nginx 互不干扰）
+name: sdp
+
+networks:
+  sdp-internal:
+    name: sdp-internal
+    driver: bridge
+
+services:
+  # 独立 Redis：仅 sdp-internal 网络内可达，不映射宿主机 6379
+  redis:
+    image: redis:7-alpine
+    container_name: sdp-redis
+    restart: unless-stopped
+    networks:
+      - sdp-internal
+    volumes:
+      - sdp-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # 后端：不映射宿主机 8080，仅容器网络内访问
+  sdp-server:
+    image: ${REGISTRY}/sdp-server:${IMAGE_TAG}
+    container_name: sdp-server
+    networks:
+      - sdp-internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      SPRING_PROFILES_ACTIVE: test
+      SPRING_DATASOURCE_URL: jdbc:dm://host.docker.internal:5236?schema=SDPDBA&compatibleMode=oracle&useUnicode=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_DATA_REDIS_HOST: sdp-redis
+      SPRING_DATA_REDIS_PORT: 6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # 独立 Nginx：映射专用端口（默认 8088），不使用宿主机 80
+  sdp-web:
+    image: ${REGISTRY}/sdp-web:${IMAGE_TAG}
+    container_name: sdp-web
+    networks:
+      - sdp-internal
+    ports:
+      - "${SDP_HTTP_BIND:-0.0.0.0}:${SDP_HTTP_PORT:-8088}:80"
+    depends_on:
+      - sdp-server
+    restart: unless-stopped
+
+volumes:
+  sdp-redis-data:
+    name: sdp-redis-data

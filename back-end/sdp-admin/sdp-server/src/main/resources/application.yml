@@ -27,7 +27,7 @@ spring:
     # 在构建 URL 时添加到视图名称后的后缀（默认值： .html）
     suffix: .html
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
 sdp:
   logging:

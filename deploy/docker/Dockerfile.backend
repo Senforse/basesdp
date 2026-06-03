@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1
+
+FROM eclipse-temurin:21-jdk AS builder
+WORKDIR /build
+
+COPY pom.xml .
+COPY sdp-common/pom.xml sdp-common/
+COPY sdp-common/sdp-common-core/pom.xml sdp-common/sdp-common-core/
+COPY sdp-common/sdp-common-security/pom.xml sdp-common/sdp-common-security/
+COPY sdp-common/sdp-common-mybatis/pom.xml sdp-common/sdp-common-mybatis/
+COPY sdp-api/pom.xml sdp-api/
+COPY sdp-modules/pom.xml sdp-modules/
+COPY sdp-modules/sdp-module-system/pom.xml sdp-modules/sdp-module-system/
+COPY sdp-modules/sdp-module-business/pom.xml sdp-modules/sdp-module-business/
+COPY sdp-modules/sdp-module-codegen/pom.xml sdp-modules/sdp-module-codegen/
+COPY sdp-gateway/pom.xml sdp-gateway/
+COPY sdp-server/pom.xml sdp-server/
+
+RUN mvn -pl sdp-server -am dependency:go-offline -B || true
+
+COPY sdp-common sdp-common/
+COPY sdp-api sdp-api/
+COPY sdp-modules sdp-modules/
+COPY sdp-gateway sdp-gateway/
+COPY sdp-server sdp-server/
+
+RUN mvn -pl sdp-server -am clean package -DskipTests -B
+
+FROM eclipse-temurin:21-jre-jammy
+WORKDIR /app
+
+RUN groupadd -r sdp && useradd -r -g sdp sdp
+
+COPY --from=builder /build/sdp-server/target/sdp-server-*.jar /app/app.jar
+RUN chown -R sdp:sdp /app
+
+USER sdp
+
+ENV SPRING_PROFILES_ACTIVE=test
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

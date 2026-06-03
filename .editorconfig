@@ -1,0 +1,9 @@
+# https://editorconfig.org — 与 IDEA 对齐：UTF-8 无 BOM（IDE 保存时勿勾选 UTF-8 BOM）
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+
+[*.{java,kt,kts,groovy,xml,xsd,xsl,yml,yaml,json,properties,sql,md,mdc,vue,ts,tsx,js,jsx,css,scss,html,gradle}]
+charset = utf-8
