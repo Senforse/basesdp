@@ -7,7 +7,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:dm://192.168.204.111:5236?schema=SDPDBA&compatibleMode=oracle&useUnicode=true&characterEncoding=UTF-8
     username: ${SDP_DB_USERNAME:sdpdba}
-    password: ${SDP_DB_PASSWORD:}
+    password: ${SDP_DB_PASSWORD:Szh_Software@617}
     driver-class-name: dm.jdbc.driver.DmDriver
     druid:
       initial-size: 5
