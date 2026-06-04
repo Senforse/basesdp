@@ -7,7 +7,8 @@ stages:
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   IMAGE_TAG: $CI_COMMIT_SHORT_SHA
-  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_HOST: unix:///var/run/docker.sock
+  DOCKER_TLS_CERTDIR: ""
 
 default:
   tags:
@@ -17,7 +18,7 @@ default:
 # ---------- 前端编译门禁（所有分支） ----------
 lint-frontend:
   stage: validate
-  image: node:22-alpine
+  image: dockerproxy.net/library/node:22-alpine
   cache:
     key: npm-$CI_COMMIT_REF_SLUG
     paths:
@@ -42,14 +43,14 @@ test-backend:
 # ---------- Docker 镜像（仅 develop） ----------
 .docker-build:
   stage: build
-  image: docker:24
-  services:
-    - docker:24-dind
+  image: dockerproxy.net/library/docker:24-cli
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == "main"
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - mkdir -p /etc/docker/certs.d/${CI_REGISTRY}
+    - cp /etc/gitlab-runner/ca.crt /etc/docker/certs.d/${CI_REGISTRY}/ca.crt
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
 
 docker-backend:
   extends: .docker-build
@@ -93,4 +94,4 @@ deploy-test:
     - bash /opt/sdp/deploy.sh
   environment:
     name: test
-    url: http://192.168.204.111:8088
+    url: http://192.168.204.111:8090
