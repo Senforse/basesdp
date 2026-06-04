@@ -30,7 +30,7 @@ lint-frontend:
 # ---------- 后端单元测试（所有分支） ----------
 test-backend:
   stage: test
-  image: maven:3.9-eclipse-temurin-21
+  image: dockerproxy.net/library/maven:3.9-eclipse-temurin-21
   cache:
     key: m2-$CI_COMMIT_REF_SLUG
     paths:
