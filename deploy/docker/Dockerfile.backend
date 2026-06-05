@@ -25,7 +25,7 @@ COPY sdp-modules sdp-modules/
 COPY sdp-gateway sdp-gateway/
 COPY sdp-server sdp-server/
 
-RUN --mount=type=bind,source=/data/maven-repository,target=/root/.m2/repository \
+RUN --mount=type=cache,source=/data/maven-repository,target=/root/.m2/repository \
     mvn -pl sdp-server -am clean package -DskipTests -B
 
 FROM eclipse-temurin:21-jre-jammy
