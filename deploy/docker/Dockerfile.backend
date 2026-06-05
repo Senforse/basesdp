@@ -16,7 +16,8 @@ COPY sdp-modules/sdp-module-codegen/pom.xml sdp-modules/sdp-module-codegen/
 COPY sdp-gateway/pom.xml sdp-gateway/
 COPY sdp-server/pom.xml sdp-server/
 
-RUN mvn -pl sdp-server -am dependency:go-offline -B || true
+RUN --mount=type=bind,source=/data/maven-repository,target=/root/.m2/repository \
+    mvn -pl sdp-server -am dependency:go-offline -B || true
 
 COPY sdp-common sdp-common/
 COPY sdp-api sdp-api/
@@ -24,7 +25,8 @@ COPY sdp-modules sdp-modules/
 COPY sdp-gateway sdp-gateway/
 COPY sdp-server sdp-server/
 
-RUN mvn -pl sdp-server -am clean package -DskipTests -B
+RUN --mount=type=bind,source=/data/maven-repository,target=/root/.m2/repository \
+    mvn -pl sdp-server -am clean package -DskipTests -B
 
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
