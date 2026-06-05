@@ -75,6 +75,7 @@ docker-frontend:
 # ---------- 部署到测试服务器（本机 shell runner） ----------
 deploy-test:
   stage: deploy
+  image: dockerproxy.net/library/docker:24-cli
   tags:
     - sdpRunner    
   rules:
@@ -97,3 +98,5 @@ deploy-test:
   environment:
     name: test
     url: http://192.168.204.111:8090
+  before_script:
+    - apk add --no-cache bash curl
