@@ -85,6 +85,7 @@ deploy-test:
     - docker-frontend
   variables:
     DEPLOY_ROOT: /opt/sdp
+    HEALTH_HOST: "192.168.204.111"
   script:
     - export REGISTRY="$CI_REGISTRY_IMAGE"
     - export IMAGE_TAG="$CI_COMMIT_SHORT_SHA"
