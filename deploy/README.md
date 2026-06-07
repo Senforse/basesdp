@@ -48,8 +48,22 @@ git push origin develop
 |-------|------|------|
 | validate | 所有分支 push | 前端 `npm run build` |
 | test | 所有分支 push | 后端 `mvn test` |
-| build | 仅 `develop` | 构建并推送 Docker 镜像到 GitLab Registry |
-| deploy | 仅 `develop` | 在测试服务器 `/opt/sdp` 执行 `docker compose up` |
+| build | 仅 `main` | 构建并推送 Docker 镜像到 GitLab Registry |
+| deploy | 仅 `main` | 在测试服务器 `/opt/sdp` 执行 `docker compose up` |
+
+### 部署 CI 镜像（免每次 `apk add`）
+
+`deploy-test` 使用项目 Registry 中的 **`ci-deploy:latest`**（基于 `docker:24-cli`，预装 `bash` / `curl`），避免每次部署从 Alpine CDN 拉包。
+
+**首次启用**（或修改 `deploy/docker/Dockerfile.ci-deploy` 后），在 Pipeline 中手动运行 **`build-ci-deploy`**，或在测试服务器执行：
+
+```bash
+cd /path/to/sdp
+docker build -f deploy/docker/Dockerfile.ci-deploy -t 192.168.204.111:5050/<组>/sdp/ci-deploy:latest .
+docker push 192.168.204.111:5050/<组>/sdp/ci-deploy:latest
+```
+
+之后 `deploy-test` 直接拉取该镜像，不再执行 `apk add`。
 
 ## 一次性：测试服务器初始化
 
@@ -192,6 +206,7 @@ deploy/
 ├── docker/
 │   ├── Dockerfile.backend    # 后端镜像（构建上下文：back-end/sdp-admin）
 │   ├── Dockerfile.frontend   # 前端镜像（构建上下文：仓库根目录）
+│   ├── Dockerfile.ci-deploy  # CI 部署作业镜像（bash + curl，推 Registry 后复用）
 │   └── nginx.conf
 ├── compose/
 │   ├── docker-compose.yml
@@ -207,7 +222,8 @@ deploy/
 |------|------|
 | Pipeline build 失败：找不到达梦驱动 | 确认 Maven 私服可解析 `DmJdbcDriver18`，或在 Dockerfile 中增加 `mvn install:install-file` |
 | deploy 失败：Runner 无 sdp-deploy tag | 检查 shell Runner 已注册且 tag 匹配 |
-| 健康检查超时 | `docker compose logs sdp-server` 查看 DM/Redis 连接错误 |
+| 健康检查超时 | 确认 `health-check.sh` 已更新（经 `docker compose exec sdp-web` 探测）；`docker compose logs sdp-server` 查看 DM/Redis |
 | 8088 无法访问 | 检查防火墙、`SDP_HTTP_PORT`、是否与宿主机 Nginx 80 混淆（Sdp 走 8088） |
 | 与宿主机 Redis 冲突 | Sdp Redis 未映射宿主机端口；若仍冲突，检查是否有其他 compose 占用同名容器 `sdp-redis` |
 | Registry 证书错误 | Docker 配置 `insecure-registries` 指向 GitLab Registry 地址 |
+| deploy 拉取 `ci-deploy:latest` 失败 | 先手动运行 Pipeline 任务 `build-ci-deploy`，或按上文一次性构建推送 |
